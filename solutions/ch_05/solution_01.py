@@ -1,2 +1,2 @@
 def solution(arr):
-    return "TETE"
+    return "TETE SDS"
