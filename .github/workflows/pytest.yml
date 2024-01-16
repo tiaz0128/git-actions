@@ -14,11 +14,16 @@ jobs:
       chapter: ${{ steps.extract.outputs.chapter }}
 
     steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
     - name: Extract Chapter
-      id: extract
       run: echo "chapter=$(echo '$GITHUB_BASE_REF' | sed 's|refs/heads/||' | cut -d/ -f2-)" >> $GITHUB_OUTPUT
-    - name: Prink Chapter
-      run: echo ${{ steps.extract.outputs.chapter }}
+    - name: Read solution number from JSON
+      id: extract
+      run: |
+        number=$(python ./script/get_number.py $GITHUB_BASE_REF) >> $GITHUB_OUTPUT
+    - name: Print Solution number
+      run: echo ${{ steps.extract.outputs.number }}
   
   hello-comment:
     runs-on: ubuntu-latest
