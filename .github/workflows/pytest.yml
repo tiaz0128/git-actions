@@ -16,6 +16,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+    - name: print
+      run: echo $GITHUB_BASE_REF
     - name: Read solution number
       id: extract
       run: |
