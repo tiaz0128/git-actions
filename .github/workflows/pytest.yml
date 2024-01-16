@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      chapter: ${{ steps.extract.outputs.chapter }}
+      number: ${{ steps.extract.outputs.number }}
 
     steps:
     - name: Checkout repository
