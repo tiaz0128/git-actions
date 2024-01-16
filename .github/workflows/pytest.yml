@@ -21,14 +21,18 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
     - name: print
-      run: echo ${{ github.ref_name }}
+      run: | 
+        echo ${{ github.ref }}
+        echo ${{ github.ref_name }}
+        echo ${{ github.head_ref }}
+        echo ${{ github.action_status }}
+        echo ${{ github.event_name }}
+        echo ${{ github.event_path }}
     - name: Read solution number
       id: extract
       run: |
         number=$(python ./script/get_number.py ${{ github.ref_name }}) >> $GITHUB_OUTPUT
         echo $number
-    - name: Print Solution number
-      run: echo ${{ steps.extract.outputs.number }}
   
   hello-comment:
     runs-on: ubuntu-latest
