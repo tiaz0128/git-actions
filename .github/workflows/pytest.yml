@@ -3,7 +3,7 @@ name: Run pytest
 on:
   push:
     branches:
-      - solution
+      - solution_*
 
 jobs:
 
@@ -21,7 +21,7 @@ jobs:
     - name: Read solution number
       id: extract
       run: |
-        number=$(python ./script/get_number.py $GITHUB_BASE_REF) >> $GITHUB_OUTPUT
+        number=$(python ./script/get_number.py ${{ github.ref_name }}) >> $GITHUB_OUTPUT
         echo "number=$number" >> $GITHUB_ENV
     - name: Print Solution number
       run: echo ${{ steps.extract.outputs.number }}
