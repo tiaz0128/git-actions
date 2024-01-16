@@ -1,10 +1,12 @@
 name: Run pytest
 
 on:
-  push:
+  pull_request:
     branches:
-      - solution_*
-
+      - '**/solution_*'
+    types:
+      - opened
+      - synchronize
 jobs:
 
   extract_chapter:
