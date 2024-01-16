@@ -3,7 +3,7 @@ name: Run pytest
 on:
   push:
     branches:
-      - '**/ch_*'
+      - solution
 
 jobs:
 
