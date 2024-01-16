@@ -32,7 +32,7 @@ jobs:
     - name: Read solution number
       id: extract
       run: |
-        number=$(python ./script/get_number.py ${{ github.ref_name }}) >> $GITHUB_OUTPUT
+        number=$(python ./script/get_number.py ${{ github.head_ref }}) >> $GITHUB_OUTPUT
         echo $number
   
   hello-comment:

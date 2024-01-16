@@ -2,6 +2,6 @@ import sys
 
 
 if __name__ == "__main__":
-    key = sys.argv[1]
+    head_ref: str = sys.argv[1]
 
-    print(f"Hello ${key}")
+    print(head_ref.split("/")[-1])
