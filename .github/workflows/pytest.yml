@@ -16,10 +16,10 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-    - name: Read solution number from JSON
+    - name: Read solution number
       id: extract
       run: |
-        number=$(python ./script/get_number.py $GITHUB_BASE_REF) >> $GITHUB_OUTPUT
+        number=$(python ./script/get_number.py echo '$GITHUB_BASE_REF') >> $GITHUB_OUTPUT
     - name: Print Solution number
       run: echo ${{ steps.extract.outputs.number }}
   
