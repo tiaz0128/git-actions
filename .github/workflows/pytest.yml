@@ -16,8 +16,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-    - name: Extract Chapter
-      run: echo "chapter=$(echo '$GITHUB_BASE_REF' | sed 's|refs/heads/||' | cut -d/ -f2-)" >> $GITHUB_OUTPUT
     - name: Read solution number from JSON
       id: extract
       run: |
