@@ -1,2 +1,2 @@
 def solution(N, stages):
-    return ""
+    return "다시 도전"
