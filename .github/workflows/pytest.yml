@@ -85,72 +85,109 @@ jobs:
             2. 로컬에서 디버깅도 해보고 스스로 코멘트를 달면서 공부해보세요! 
             3. 다시 한번 문제를 풀어서 `push` 해보세요!
 
-  # test:
-  #   runs-on: ubuntu-latest
-  #   needs: extract-num
+  test:
+    runs-on: ubuntu-latest
+    needs: extract-num
 
-  #   strategy:
-  #     matrix:
-  #       python-version:
-  #         - '3.8'
+    strategy:
+      matrix:
+        python-version:
+          - '3.8'
 
-  #   steps:
-  #   - name: Checkout repository
-  #     uses: actions/checkout@v4
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-  #   - name: Set up Python
-  #     uses: actions/setup-python@v5
-  #     with:
-  #       python-version: ${{ matrix.python-version }}
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
 
-  #   - name: Install dependencies
-  #     run: |
-  #       python -m pip install --upgrade pip
-  #       pip install pytest python-dotenv
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest python-dotenv
 
-  #   - name: Run pytest
-  #     run: pytest --id=${{ author }} -k 'test_${{ needs.extract-num.outputs.solution }}'
+    - name: Run pytest
+      run: pytest --id=${{ github.actor }} -k 'test_${{ needs.extract-num.outputs.num }}'
 
-  # review-fail:
-  #   runs-on: ubuntu-latest
-  #   needs: test
-  #   if: failure()
-  #   steps:
-  #   - name: if fail test 
-  #     uses: wow-actions/auto-comment@v1
-  #     with:
-  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #       pullRequestOpened: |
-  #          ❌ @{{author}} 님. 아쉽습니다.
+  create-and-add-label:
+    runs-on: ubuntu-latest
+    needs: [test, extract-num]
+    if: always()
+    steps:
+    - name: Create and Add Label
+      uses: actions/github-script@v5
+      with:
+        script: |
+          const labelName = '문제${{ needs.extract-num.outputs.num }}';
+          const labelColor = 'ffffff'; // 라벨 색상을 HEX 코드로 설정
+
+          // 라벨이 존재하는지 확인
+          try {
+            await github.rest.issues.getLabel({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: labelName
+            });
+          } catch (error) {
+            // 라벨이 존재하지 않으면 생성
+            await github.rest.issues.createLabel({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: labelName,
+              color: labelColor,
+            });
+          }
+
+          // 풀 리퀘스트에 라벨 추가
+          await github.rest.issues.addLabels({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            labels: [labelName]
+          });
+
+  review-fail:
+    runs-on: ubuntu-latest
+    needs: [test, extract-num]
+    if: failure()
+    steps:
+    - name: if fail test 
+      uses: wow-actions/auto-comment@v1
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        pullRequestOpened: |
+           ❌ @{{author}} 님. 아쉽습니다.
            
-  #          테스트에 실패했습니다.
-  #          다시 한번 문제를 풀고, `push` 하고 테스트를 통과해보세요!
+           테스트에 실패했습니다.
+           다시 한번 문제를 풀고, `push` 하고 테스트를 통과해보세요!
 
-  #       pullRequestSynchronize: |
-  #          ❌ @{{author}} 님. 아쉽습니다.
+        pullRequestSynchronize: |
+           ❌ @{{author}} 님. 아쉽습니다.
            
-  #          테스트에 실패했습니다.
-  #          다시 한번 문제를 풀고, `push` 하고 테스트를 통과해보세요!
+           테스트에 실패했습니다.
+           다시 한번 문제를 풀고, `push` 하고 테스트를 통과해보세요!
 
-  # review-pass:
-  #   runs-on: ubuntu-latest
-  #   needs: [extract-num, test, ]
-  #   if: success()
-  #   steps:
-  #   - name: if pass test
-  #     uses: wow-actions/auto-comment@v1
-  #     with:
-  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  review-pass:
+    runs-on: ubuntu-latest
+    needs: [extract-num, test]
+    if: success()
+    steps:
+    - name: if pass test
+      uses: wow-actions/auto-comment@v1
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  #       pullRequestOpened: |
-  #           🎉 @{{ author }} 님. 축하 합니다! 
+        pullRequestOpened: |
+            🎉 @{{ author }} 님. 축하 합니다! 
             
-  #           문제 `${{ needs.extract-num.outputs.solution }}` 테스트를 통과하셨습니다!
-  #           soluton 브랜치에 Merge 해주세요!
+            문제 `${{ needs.extract-num.outputs.num }}` 테스트를 통과하셨습니다!
+            soluton 브랜치에 Merge 해주세요!
     
-  #       pullRequestSynchronize: |
-  #           🎉 @{{ author }} 님. 축하 합니다! 
+        pullRequestSynchronize: |
+            🎉 @{{ author }} 님. 축하 합니다! 
             
-  #           문제 `${{ needs.extract-num.outputs.solution }}` 테스트를 통과하셨습니다!
-  #           soluton 브랜치에 Merge 해주세요!
+            문제 `${{ needs.extract-num.outputs.num }}` 테스트를 통과하셨습니다!
+            soluton 브랜치에 Merge 해주세요!
     
