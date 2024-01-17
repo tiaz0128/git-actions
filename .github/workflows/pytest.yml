@@ -76,10 +76,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           pullRequestOpened: |
             👋 @{{ author }} 님 안녕하세요!
-            문제 ${{ needs.extract-num.outputs.num }} 를 풀고 있으시네요!
-            해당 문제는 책의 아래의 페이지와 프로그래머스 링크를 알려드릴께요!
+            코딩 테스트 합격자 되기(파이썬 편) : `문제 ${{ needs.extract-num.outputs.num }}` 를 풀고 있으시네요!
+            해당 문제의 책 페이지와 프로그래머스 링크를 알려드릴께요!
 
-            참조 : ${{ needs.extract-info.outputs.info }}
+            ${{ needs.extract-info.outputs.info }}
             
             1. 테스트가 실패한 경우 다시 한번 문제를 풀어서 `push` 해보세요!
             2. 로컬에서 디버깅도 해보고 스스로 코멘트를 달면서 공부해보세요! 
@@ -162,12 +162,18 @@ jobs:
            
            테스트에 실패했습니다.
            다시 한번 문제를 풀고, `push` 하고 테스트를 통과해보세요!
+           
+           너무 어려우시면 같은 문제를 다른 사람들은 어떻게 풀고있는지 참고도 해보세요!
+           [문제 ${{needs.extract-num.outputs.num}} - 보러가기](${{github.server_url}}/${{github.repository}}/pulls?q=is%3Apr+label%3A문제${{needs.extract-num.outputs.num}}) 
 
         pullRequestSynchronize: |
            ❌ @{{author}} 님. 아쉽습니다.
            
            테스트에 실패했습니다.
            다시 한번 문제를 풀고, `push` 하고 테스트를 통과해보세요!
+
+           너무 어려우시면 같은 문제를 다른 사람들은 어떻게 풀고있는지 참고도 해보세요!
+           [문제 ${{needs.extract-num.outputs.num}} - 보러가기](${{github.server_url}}/${{github.repository}}/pulls?q=is%3Apr+label%3A문제${{needs.extract-num.outputs.num}}) 
 
   review-pass:
     runs-on: ubuntu-latest
@@ -184,10 +190,16 @@ jobs:
             
             문제 `${{ needs.extract-num.outputs.num }}` 테스트를 통과하셨습니다!
             soluton 브랜치에 Merge 해주세요!
+
+            도움이 필요한 사람들이 있으면 도와주세요! 소통하면서 더 성장 할 수 있는 좋은 기회입니다!
+            [문제 ${{needs.extract-num.outputs.num}} - 도움주러 가기](${{github.server_url}}/${{github.repository}}/pulls?q=is%3Apr+label%3A문제${{needs.extract-num.outputs.num}})
     
         pullRequestSynchronize: |
             🎉 @{{ author }} 님. 축하 합니다! 
             
             문제 `${{ needs.extract-num.outputs.num }}` 테스트를 통과하셨습니다!
             soluton 브랜치에 Merge 해주세요!
+
+            도움이 필요한 사람들이 있으면 도와주세요! 소통하면서 더 성장 할 수 있는 좋은 기회입니다!
+            [문제 ${{needs.extract-num.outputs.num}} - 도움주러 가기](${{github.server_url}}/${{github.repository}}/pulls?q=is%3Apr+label%3A문제${{needs.extract-num.outputs.num}})
     
