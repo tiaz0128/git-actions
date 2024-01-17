@@ -32,7 +32,7 @@ jobs:
     - name: Read solution number from Branch
       id: extract
       run: |
-        solution=$(python ./script/get_number.py ${{ github.head_ref }}) >> $GITHUB_OUTPUT
+        echo "solution=$(python ./script/get_number.py ${{ github.head_ref }})" >> $GITHUB_OUTPUT
     - name: Print solution number
       run: echo ${{ steps.extract.outputs.solution }}
   
@@ -49,7 +49,7 @@ jobs:
       - name: Read solution-info from JSON
         id: extract-json
         run: |
-          info=$(python ./script/read_json.py ${{ needs.extract-num.outputs.solution }}) >> $GITHUB_OUTPUT
+          echo "info=$(python ./script/read_json.py ${{ needs.extract-num.outputs.solution }})" >> $GITHUB_OUTPUT
       - name: Print solution info
         run: echo ${{ steps.extract-json.outputs.info }}
         
