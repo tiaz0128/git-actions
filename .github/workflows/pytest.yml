@@ -51,7 +51,8 @@ jobs:
       - name: Read solution-info from JSON
         id: extract-json
         run: |
-          echo "info=$(python ./script/read_json.py ${{ needs.extract-num.outputs.solution }})" >> $GITHUB_OUTPUT
+          cd ./script
+          echo "info=$(python read_json.py ${{ needs.extract-num.outputs.solution }})" >> $GITHUB_OUTPUT
       - name: Print solution info
         run: echo ${{ steps.extract-json.outputs.info }}
         
