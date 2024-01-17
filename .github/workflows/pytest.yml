@@ -4,9 +4,7 @@ on:
   pull_request:
     branches:
       - solutions
-      - '**/[0-9]'
-      - '**/[1-9][0-9]'
-      - '**/[1-9][0-9][0-9]'
+      - '**/[0-9][0-9][0-9]'
     types:
       - opened
       - synchronize
@@ -109,7 +107,7 @@ jobs:
         pip install pytest python-dotenv
 
     - name: Run pytest
-      run: pytest --id=${{ github.actor }} -k 'test_${{ needs.extract-num.outputs.num }}'
+      run: pytest --id=${{ github.actor }} -k 'test_${{needs.extract-num.outputs.num}}'
 
   create-and-add-label:
     runs-on: ubuntu-latest
