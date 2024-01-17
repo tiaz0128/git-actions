@@ -1,2 +1,2 @@
 def solution(arr):
-    return "rtestest"
+    return "1234"
