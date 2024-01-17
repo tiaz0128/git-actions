@@ -54,7 +54,7 @@ jobs:
           cd ./script
           echo "info=$(python read_json.py ${{ needs.extract-num.outputs.num }})" >> $GITHUB_OUTPUT
       - name: Print solution info
-        run: echo ${{ steps.extract-json.outputs.info }}
+        run: echo "${{ steps.extract-json.outputs.info }}"
         
   hello-comment:
     runs-on: ubuntu-latest
@@ -67,7 +67,7 @@ jobs:
       - name: Print solution number annd info
         run: |
           echo ${{ needs.extract-num.outputs.num }} 
-          echo ${{ needs.extract-info.outputs.info }}
+          echo "${{ needs.extract-info.outputs.info }}"
 
       - name: Auto Comment on Pull Request
         if: github.event_name == 'pull_request' && github.event.action == 'opened'
