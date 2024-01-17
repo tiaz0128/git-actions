@@ -12,7 +12,7 @@ on:
       - synchronize
 jobs:
 
-  extract_num:
+  extract-num:
     runs-on: ubuntu-latest
 
     outputs:
@@ -21,7 +21,7 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-    - name: print
+    - name: Print Context
       run: | 
         echo ${{ github.ref }}
         echo ${{ github.ref_name }}
@@ -29,115 +29,128 @@ jobs:
         echo ${{ github.action_status }}
         echo ${{ github.event_name }}
         echo ${{ github.event_path }}
-    - name: Read solution number at Branch
+    - name: Read solution number from Branch
       id: extract
       run: |
         solution=$(python ./script/get_number.py ${{ github.head_ref }}) >> $GITHUB_OUTPUT
-        echo $solution
+    - name: Print solution number
+      run: echo ${{ steps.extract.outputs.solution }}
   
-  hello-comment:
+  get-info:
     runs-on: ubuntu-latest
-    needs: extract_num
+    needs: extract-num
 
     outputs:
       info: ${{ steps.extract-json.outputs.info }}
-
+      
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
-      - name: print solution number
-        run: echo ${{ needs.extract_num.outputs.solution }}
-
       - name: Read solution-info from JSON
         id: extract-json
         run: |
-          info=$(python ./script/read_json.py ${{ needs.extract_num.outputs.solution }}) >> $GITHUB_OUTPUT
-      - name: Print Solution Info
+          info=$(python ./script/read_json.py ${{ needs.extract-num.outputs.solution }}) >> $GITHUB_OUTPUT
+      - name: Print solution info
         run: echo ${{ steps.extract-json.outputs.info }}
+        
+  # hello-comment:
+  #   runs-on: ubuntu-latest
+  #   needs: [extract-num, get-info]
+
+  #   outputs:
+  #     info: ${{ steps.extract-json.outputs.info }}
+
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
+      
+  #     - name: print solution number
+  #       run: echo ${{ needs.extract_num.outputs.solution }}
+
+
   
-      - name: Auto Comment on Pull Request
-        if: github.event_name == 'pull_request' && github.event.action == 'opened'
-        uses: wow-actions/auto-comment@v1
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          pullRequestOpened: |
-            👋 @{{ author }} 님 안녕하세요!
-            문제 ${{ needs.extract_num.outputs.solution }} 를 풀고 있으시네요!
-            해당 문제는 책의 아래의 페이지와 프로그래머스 링크를 알려드릴께요!
+  #     - name: Auto Comment on Pull Request
+  #       if: github.event_name == 'pull_request' && github.event.action == 'opened'
+  #       uses: wow-actions/auto-comment@v1
+  #       with:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #         pullRequestOpened: |
+  #           👋 @{{ author }} 님 안녕하세요!
+  #           문제 ${{ needs.extract_num.outputs.solution }} 를 풀고 있으시네요!
+  #           해당 문제는 책의 아래의 페이지와 프로그래머스 링크를 알려드릴께요!
 
-            참조 : ${{ steps.extract-json.outputs.info }}
+  #           참조 : ${{ steps.extract-json.outputs.info }}
             
-            1. 테스트가 실패한 경우 다시 한번 문제를 풀어서 `push` 해보세요!
-            2. 로컬에서 디버깅도 해보고 스스로 코멘트를 달면서 공부해보세요! 
-            3. 다시 한번 문제를 풀어서 `push` 해보세요!
+  #           1. 테스트가 실패한 경우 다시 한번 문제를 풀어서 `push` 해보세요!
+  #           2. 로컬에서 디버깅도 해보고 스스로 코멘트를 달면서 공부해보세요! 
+  #           3. 다시 한번 문제를 풀어서 `push` 해보세요!
 
-  test:
-    runs-on: ubuntu-latest
-    needs: extract_num
+  # test:
+  #   runs-on: ubuntu-latest
+  #   needs: extract_num
 
-    strategy:
-      matrix:
-        python-version:
-          - '3.8'
+  #   strategy:
+  #     matrix:
+  #       python-version:
+  #         - '3.8'
 
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+  #   steps:
+  #   - name: Checkout repository
+  #     uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
+  #   - name: Set up Python
+  #     uses: actions/setup-python@v5
+  #     with:
+  #       python-version: ${{ matrix.python-version }}
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pytest python-dotenv
+  #   - name: Install dependencies
+  #     run: |
+  #       python -m pip install --upgrade pip
+  #       pip install pytest python-dotenv
 
-    - name: Run pytest
-      run: pytest --id=${{ github.actor }} -k 'test_${{ needs.extract_num.outputs.solution }}'
+  #   - name: Run pytest
+  #     run: pytest --id=${{ github.actor }} -k 'test_${{ needs.extract_num.outputs.solution }}'
 
-  review-fail:
-    runs-on: ubuntu-latest
-    needs: test
-    if: failure()
-    steps:
-    - name: if fail test 
-      uses: wow-actions/auto-comment@v1
-      with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        pullRequestOpened: |
-           ❌ @{{author}} 님. 아쉽습니다.
+  # review-fail:
+  #   runs-on: ubuntu-latest
+  #   needs: test
+  #   if: failure()
+  #   steps:
+  #   - name: if fail test 
+  #     uses: wow-actions/auto-comment@v1
+  #     with:
+  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       pullRequestOpened: |
+  #          ❌ @{{author}} 님. 아쉽습니다.
            
-           테스트에 실패했습니다.
-           다시 한번 문제를 풀고, `push` 하고 테스트를 통과해보세요!
+  #          테스트에 실패했습니다.
+  #          다시 한번 문제를 풀고, `push` 하고 테스트를 통과해보세요!
 
-        pullRequestSynchronize: |
-           ❌ @{{author}} 님. 아쉽습니다.
+  #       pullRequestSynchronize: |
+  #          ❌ @{{author}} 님. 아쉽습니다.
            
-           테스트에 실패했습니다.
-           다시 한번 문제를 풀고, `push` 하고 테스트를 통과해보세요!
+  #          테스트에 실패했습니다.
+  #          다시 한번 문제를 풀고, `push` 하고 테스트를 통과해보세요!
 
-  review-pass:
-    runs-on: ubuntu-latest
-    needs: [extract_num, test, ]
-    if: success()
-    steps:
-    - name: if pass test
-      uses: wow-actions/auto-comment@v1
-      with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # review-pass:
+  #   runs-on: ubuntu-latest
+  #   needs: [extract_num, test, ]
+  #   if: success()
+  #   steps:
+  #   - name: if pass test
+  #     uses: wow-actions/auto-comment@v1
+  #     with:
+  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-        pullRequestOpened: |
-            🎉 @{{ author }} 님. 축하 합니다! 
+  #       pullRequestOpened: |
+  #           🎉 @{{ author }} 님. 축하 합니다! 
             
-            문제 `${{ needs.extract_num.outputs.solution }}` 테스트를 통과하셨습니다!
-            soluton 브랜치에 Merge 해주세요!
+  #           문제 `${{ needs.extract_num.outputs.solution }}` 테스트를 통과하셨습니다!
+  #           soluton 브랜치에 Merge 해주세요!
     
-        pullRequestSynchronize: |
-            🎉 @{{ author }} 님. 축하 합니다! 
+  #       pullRequestSynchronize: |
+  #           🎉 @{{ author }} 님. 축하 합니다! 
             
-            문제 `${{ needs.extract_num.outputs.solution }}` 테스트를 통과하셨습니다!
-            soluton 브랜치에 Merge 해주세요!
+  #           문제 `${{ needs.extract_num.outputs.solution }}` 테스트를 통과하셨습니다!
+  #           soluton 브랜치에 Merge 해주세요!
     
