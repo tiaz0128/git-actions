@@ -46,6 +46,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Print extract solution number
+        run: echo ${{needs.extract-num.outputs.solution }}
       - name: Read solution-info from JSON
         id: extract-json
         run: |
