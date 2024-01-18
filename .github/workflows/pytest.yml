@@ -50,7 +50,7 @@ jobs:
         id: extract-json
         run: |
           cd ./script
-          echo "info=$(python read_json.py ${{ needs.extract-num.outputs.num }})" >> $GITHUB_OUTPUT
+          echo "info=$(python read_json.py solutions.json ${{ needs.extract-num.outputs.num }})" >> $GITHUB_OUTPUT
       - name: Print solution info
         run: echo "${{ steps.extract-json.outputs.info }}"
         
@@ -85,8 +85,8 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    needs: extract-num
-
+    needs: [extract-num, hello-comment]
+    if: always()
     strategy:
       matrix:
         python-version:
@@ -107,7 +107,7 @@ jobs:
         pip install pytest python-dotenv
 
     - name: Run pytest
-      run: pytest --id=${{ github.actor }} -k 'test_${{needs.extract-num.outputs.num}}'
+      run: pytest --id=${{ github.actor }} -k 'test_${{ needs.extract-num.outputs.num }}'
 
   create-and-add-label:
     runs-on: ubuntu-latest
@@ -151,6 +151,36 @@ jobs:
     needs: [test, extract-num]
     if: failure()
     steps:
+    - name: Remove Success Label if exists
+      uses: actions/github-script@v5
+      with:
+        script: |
+          const issue = await github.rest.issues.get({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo
+          });
+          const hasFailLabel = issue.data.labels.some(label => label.name === 'pass');
+          if (hasFailLabel) {
+            // pass 라벨 삭제
+            await github.rest.issues.removeLabel({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: 'pass'
+            });
+          }
+    - name: Add Fail Label
+      uses: actions/github-script@v5
+      with:
+        script: |
+          // fail 라벨 추가
+          await github.rest.issues.addLabels({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            labels: ['fail']
+          });
     - name: if fail test 
       uses: wow-actions/auto-comment@v1
       with:
@@ -178,6 +208,46 @@ jobs:
     needs: [extract-num, test]
     if: success()
     steps:
+    - name: Remove Fail Label if exists
+      uses: actions/github-script@v5
+      with:
+        script: |
+          const issue = await github.rest.issues.get({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo
+          });
+          const hasFailLabel = issue.data.labels.some(label => label.name === 'fail');
+          if (hasFailLabel) {
+            // fail 라벨 삭제
+            await github.rest.issues.removeLabel({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: 'fail'
+            });
+          }
+          const hasHelpLabel = issue.data.labels.some(label => label.name === '도움이 필요해요!');
+          if (hasHelpLabel) {
+            // 도움 라벨 삭제
+            await github.rest.issues.removeLabel({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: '도움이 필요해요!'
+            });
+          }
+    - name: Add Fail Label
+      uses: actions/github-script@v5
+      with:
+        script: |
+          // pass 라벨 추가
+          await github.rest.issues.addLabels({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            labels: ['pass']
+          });
     - name: if pass test
       uses: wow-actions/auto-comment@v1
       with:
@@ -187,17 +257,42 @@ jobs:
             🎉 @{{ author }} 님. 축하 합니다! 
             
             문제 `${{ needs.extract-num.outputs.num }}` 테스트를 통과하셨습니다!
-            soluton 브랜치에 Merge 해주세요!
+            `solutons` 브랜치에 Merge 해주세요!
 
             도움이 필요한 사람들이 있으면 도와주세요! 소통하면서 더 성장 할 수 있는 좋은 기회입니다!
-            [문제 ${{needs.extract-num.outputs.num}} - 도움주러 가기](${{github.server_url}}/${{github.repository}}/pulls?q=is%3Apr+label%3A문제${{needs.extract-num.outputs.num}})
+            [문제 ${{needs.extract-num.outputs.num}} - 도움주러 가기](${{github.server_url}}/${{github.repository}}/pulls?q=is%3Apr+label%3A"도움이+필요해요%21"+label%3A문제${{needs.extract-num.outputs.num}})
     
         pullRequestSynchronize: |
             🎉 @{{ author }} 님. 축하 합니다! 
             
             문제 `${{ needs.extract-num.outputs.num }}` 테스트를 통과하셨습니다!
-            soluton 브랜치에 Merge 해주세요!
+            `solutons` 브랜치에 Merge 해주세요!
 
             도움이 필요한 사람들이 있으면 도와주세요! 소통하면서 더 성장 할 수 있는 좋은 기회입니다!
-            [문제 ${{needs.extract-num.outputs.num}} - 도움주러 가기](${{github.server_url}}/${{github.repository}}/pulls?q=is%3Apr+label%3A문제${{needs.extract-num.outputs.num}})
+            [문제 ${{needs.extract-num.outputs.num}} - 도움주러 가기](${{github.server_url}}/${{github.repository}}/pulls?q=is%3Apr+label%3A"도움이+필요해요%21"+label%3A문제${{needs.extract-num.outputs.num}})
     
+    # 문제 읽어서 comment
+    - name: Read solution path
+      id: path
+      run: |
+        echo "path=$(python ./script/read_json.py solutions.json path.json ${{ needs.extract-num.outputs.num }})" >> $GITHUB_OUTPUT
+    - name: Read pass solution
+      id: extract
+      run: |
+        echo "solution=$(python ./script/rad_pass_solution.py  '..\\src\\${{github.actor}}\\${{steps.path.outputs.path}}\\solution_${{ needs.extract-num.outputs.num }}.py')" >> $GITHUB_OUTPUT
+    - name: Print solution number
+      run: echo ${{ steps.extract.outputs.solution }}
+    - name: Write pass solutin at comment
+      uses: wow-actions/auto-comment@v1
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+        pullRequestOpened: |
+           ```python
+           ${{steps.extract.outputs.solution}}
+           ```
+    
+        pullRequestSynchronize: |
+          ```python
+          ${{steps.extract.outputs.solution}}
+          ```
