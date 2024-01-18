@@ -202,6 +202,34 @@ jobs:
 
            너무 어려우시면 같은 문제를 다른 사람들은 어떻게 풀고있는지 참고도 해보세요!
            [문제 ${{needs.extract-num.outputs.num}} - 보러가기](${{github.server_url}}/${{github.repository}}/pulls?q=is%3Apr+label%3A문제${{needs.extract-num.outputs.num}}) 
+    
+    # 문제 읽어서 comment
+    - name: Read solution path
+      id: path
+      run: |
+        echo "path=$(python ./script/read_json.py solutions.json path.json ${{ needs.extract-num.outputs.num }})" >> $GITHUB_OUTPUT
+    - name: Read pass solution
+      id: extract
+      run: |
+        echo "solution=$(python ./script/rad_pass_solution.py  '..\\src\\${{github.actor}}\\${{steps.path.outputs.path}}\\solution_${{ needs.extract-num.outputs.num }}.py')" >> $GITHUB_OUTPUT
+    - name: Print solution number
+      run: echo ${{ steps.extract.outputs.solution }}
+    - name: Write pass solutin at comment
+      uses: wow-actions/auto-comment@v1
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+        pullRequestOpened: |
+           ```python
+           ${{steps.extract.outputs.solution}}
+           ```
+    
+        pullRequestSynchronize: |
+          ```python
+          ${{steps.extract.outputs.solution}}
+          ```
+
+
 
   review-pass:
     runs-on: ubuntu-latest
