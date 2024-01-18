@@ -205,6 +205,8 @@ jobs:
            [문제 ${{needs.extract-num.outputs.num}} - 보러가기](${{github.server_url}}/${{github.repository}}/pulls?q=is%3Apr+label%3A문제${{needs.extract-num.outputs.num}}) 
     
     # 문제 읽어서 comment
+    - name: Checkout repository
+      uses: actions/checkout@v4
     - name: Read solution path
       id: path
       run: |
@@ -302,6 +304,8 @@ jobs:
             [문제 ${{needs.extract-num.outputs.num}} - 도움주러 가기](${{github.server_url}}/${{github.repository}}/pulls?q=is%3Apr+label%3A"도움이+필요해요%21"+label%3A문제${{needs.extract-num.outputs.num}})
     
     # 문제 읽어서 comment
+    - name: Checkout repository
+      uses: actions/checkout@v4
     - name: Read solution path
       id: path
       run: |
