@@ -207,7 +207,7 @@ jobs:
     - name: Read solution path
       id: path
       run: |
-        echo "path=$(python ./script/read_json.py solutions.json path.json ${{ needs.extract-num.outputs.num }})" >> $GITHUB_OUTPUT
+        echo "path=$(python ./script/read_json.py path.json ${{ needs.extract-num.outputs.num }})" >> $GITHUB_OUTPUT
     - name: Read pass solution
       id: extract
       run: |
@@ -303,7 +303,7 @@ jobs:
     - name: Read solution path
       id: path
       run: |
-        echo "path=$(python ./script/read_json.py solutions.json path.json ${{ needs.extract-num.outputs.num }})" >> $GITHUB_OUTPUT
+        echo "path=$(python ./script/read_json.py path.json ${{ needs.extract-num.outputs.num }})" >> $GITHUB_OUTPUT
     - name: Read pass solution
       id: extract
       run: |
