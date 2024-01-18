@@ -50,7 +50,7 @@ jobs:
         id: extract-json
         run: |
           cd ./script
-          echo "info=$(python read_json.py ./script/json/solutions.json ${{ needs.extract-num.outputs.num }})" >> $GITHUB_OUTPUT
+          echo "info=$(python read_json.py ./json/solutions.json ${{ needs.extract-num.outputs.num }})" >> $GITHUB_OUTPUT
       - name: Print solution info
         run: echo "${{ steps.extract-json.outputs.info }}"
         
@@ -207,11 +207,11 @@ jobs:
     - name: Read solution path
       id: path
       run: |
-        echo "path=$(python ./script/read_json.py ./script/json/path.json ${{ needs.extract-num.outputs.num }})" >> $GITHUB_OUTPUT
+        echo "path=$(python ./script/read_json.py ./json/path.json ${{ needs.extract-num.outputs.num }})" >> $GITHUB_OUTPUT
     - name: Read pass solution
       id: extract
       run: |
-        echo "solution=$(python ./script/rad_pass_solution.py  '..\\src\\${{github.actor}}\\${{steps.path.outputs.path}}\\solution_${{ needs.extract-num.outputs.num }}.py')" >> $GITHUB_OUTPUT
+        echo "solution=$(python ./script/read_pass_solution.py src/${{github.actor}}/${{steps.path.outputs.path}}\\solution_${{ needs.extract-num.outputs.num }}.py')" >> $GITHUB_OUTPUT
     - name: Print solution number
       run: echo ${{ steps.extract.outputs.solution }}
     - name: Write pass solutin at comment
@@ -303,11 +303,11 @@ jobs:
     - name: Read solution path
       id: path
       run: |
-        echo "path=$(python ./script/read_json.py ./script/json/path.json ${{ needs.extract-num.outputs.num }})" >> $GITHUB_OUTPUT
+        echo "path=$(python ./script/read_json.py ./json/path.json ${{ needs.extract-num.outputs.num }})" >> $GITHUB_OUTPUT
     - name: Read pass solution
       id: extract
       run: |
-        echo "solution=$(python ./script/rad_pass_solution.py  './src/${{github.actor}}/${{steps.path.outputs.path}}/solution_${{ needs.extract-num.outputs.num }}.py')" >> $GITHUB_OUTPUT
+        echo "solution=$(python ./script/read_pass_solution.py /src/${{github.actor}}/${{steps.path.outputs.path}}/solution_${{ needs.extract-num.outputs.num }}.py)" >> $GITHUB_OUTPUT
     - name: Print solution number
       run: echo ${{ steps.extract.outputs.solution }}
     - name: Write pass solutin at comment
