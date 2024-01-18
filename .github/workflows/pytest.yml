@@ -215,6 +215,7 @@ jobs:
     - name: Read pass solution
       id: extract
       run: |
+        cd ./script
         echo "solution=$(python read_pass_solution.py src/${{github.actor}}/${{steps.path.outputs.path}}/solution_${{ needs.extract-num.outputs.num }}.py')" >> $GITHUB_OUTPUT
     - name: Print solution number
       run: echo ${{ steps.extract.outputs.solution }}
@@ -314,6 +315,7 @@ jobs:
     - name: Read pass solution
       id: extract
       run: |
+        cd ./script
         echo "solution=$(python read_pass_solution.py /src/${{github.actor}}/${{steps.path.outputs.path}}/solution_${{ needs.extract-num.outputs.num }}.py)" >> $GITHUB_OUTPUT
     - name: Print solution number
       run: echo ${{ steps.extract.outputs.solution }}
