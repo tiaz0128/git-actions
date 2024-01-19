@@ -1,2 +1,4 @@
 def solution(N, stages):
-    return
+    """"""
+    a = "''"
+    return "TEST"
