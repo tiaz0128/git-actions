@@ -1,2 +1,3 @@
 def solution(N, stages):
-    return
+    """'''/\\!##!$@$!#"""
+    return "TEST"
