@@ -211,14 +211,12 @@ jobs:
       id: path
       run: |
         cd ./script
-        echo "path=$(python read_json.py ./json/path.json ${{ needs.extract-num.outputs.num }})" >> $GITHUB_OUTPUT
-    - name: Read pass solution
-      id: extract
-      run: |
-        cd ./script
-        echo "solution=$(cat ../src/${{github.actor}}/${{steps.path.outputs.path}}/solution_${{ needs.extract-num.outputs.num }}.py)" >> $GITHUB_OUTPUT
-    - name: Print solution number
-      run: echo ${{ steps.extract.outputs.solution }}
+        echo "path=$(python read_json.py ./json/path.json ${{ needs.extract-num.outputs.num }})" >> $GITHUB_OUTPUT      
+    - name: Read package.json
+      id: package
+      uses: juliangruber/read-file-action@v1
+      with:
+        path: ../src/${{github.actor}}/${{steps.path.outputs.path}}/solution_${{ needs.extract-num.outputs.num }}.py
     - name: Write pass solutin at comment
       uses: wow-actions/auto-comment@v1
       with:
@@ -226,12 +224,12 @@ jobs:
 
         pullRequestOpened: |
            ```python
-           ${{steps.extract.outputs.solution}}
+           ${{steps.package.outputs.content}}
            ```
     
         pullRequestSynchronize: |
           ```python
-          ${{steps.extract.outputs.solution}}
+          ${{steps.package.outputs.content}}
           ```
 
 
@@ -312,13 +310,11 @@ jobs:
       run: |
         cd ./script
         echo "path=$(python read_json.py ./json/path.json ${{ needs.extract-num.outputs.num }})" >> $GITHUB_OUTPUT
-    - name: Read pass solution
-      id: extract
-      run: |
-        cd ./script
-        echo "solution=$(cat ../src/${{github.actor}}/${{steps.path.outputs.path}}/solution_${{ needs.extract-num.outputs.num }}.py)" >> $GITHUB_OUTPUT
-    - name: Print solution number
-      run: echo ${{ steps.extract.outputs.solution }}
+    - name: Read package.json
+      id: package
+      uses: juliangruber/read-file-action@v1
+      with:
+        path: ../src/${{github.actor}}/${{steps.path.outputs.path}}/solution_${{ needs.extract-num.outputs.num }}.py
     - name: Write pass solutin at comment
       uses: wow-actions/auto-comment@v1
       with:
@@ -326,10 +322,10 @@ jobs:
 
         pullRequestOpened: |
            ```python
-           ${{steps.extract.outputs.solution}}
+           ${{steps.package.outputs.content}}
            ```
     
         pullRequestSynchronize: |
           ```python
-          ${{steps.extract.outputs.solution}}
+          ${{steps.package.outputs.content}}
           ```
