@@ -216,7 +216,7 @@ jobs:
       id: package
       uses: juliangruber/read-file-action@v1
       with:
-        path: ../src/${{github.actor}}/${{steps.path.outputs.path}}/solution_${{ needs.extract-num.outputs.num }}.py
+        path: ./src/${{github.actor}}/${{steps.path.outputs.path}}/solution_${{ needs.extract-num.outputs.num }}.py
     - name: Write pass solutin at comment
       uses: wow-actions/auto-comment@v1
       with:
@@ -314,7 +314,7 @@ jobs:
       id: package
       uses: juliangruber/read-file-action@v1
       with:
-        path: ../src/${{github.actor}}/${{steps.path.outputs.path}}/solution_${{ needs.extract-num.outputs.num }}.py
+        path: ./src/${{github.actor}}/${{steps.path.outputs.path}}/solution_${{ needs.extract-num.outputs.num }}.py
     - name: Write pass solutin at comment
       uses: wow-actions/auto-comment@v1
       with:
