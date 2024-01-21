@@ -118,10 +118,11 @@ jobs:
       with:
         context: .
         file: ./Dockerfile
+        tags: pytest-container
         push: false
-
-    - name: Build Docker image
-      run: docker build --build-arg TEST_ID="${{ github.actor }}" --build-arg TEST_NUM="test_${{ needs.extract-num.outputs.num }}" -t pytest-container .
+        build-args: |
+          TEST_ID="${{ github.actor }}"
+          TEST_NUM="test_${{ needs.extract-num.outputs.num }}"
   
     - name: Run tests with Docker
       run: docker run pytest-container
