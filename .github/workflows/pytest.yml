@@ -110,8 +110,8 @@ jobs:
     # - name: Run pytest
     #   run: pytest --id=${{ github.actor }} -k 'test_${{ needs.extract-num.outputs.num }}'
 
-    - name: Set up Docker
-      uses: docker/setup-buildx-action@v3
+    # - name: Set up Docker
+    #   uses: docker/setup-buildx-action@v3
 
     - name: Build Docker image
       run: docker build --build-arg TEST_ID="${{github.actor}}" TEST_NUM="test_${{needs.extract-num.outputs.num}}" -t pytest-container .
