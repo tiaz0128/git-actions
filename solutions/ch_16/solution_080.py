@@ -1,2 +1,0 @@
-def solution(amount):
-    return

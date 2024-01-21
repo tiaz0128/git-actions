@@ -1,2 +1,0 @@
-def solution(triangle):
-    return

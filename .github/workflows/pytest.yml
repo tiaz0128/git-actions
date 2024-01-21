@@ -97,18 +97,29 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
+    # - name: Set up Python
+    #   uses: actions/setup-python@v5
+    #   with:
+    #     python-version: ${{ matrix.python-version }}
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pytest python-dotenv
+    # - name: Install dependencies
+    #   run: |
+    #     python -m pip install --upgrade pip
+    #     pip install pytest python-dotenv
 
-    - name: Run pytest
-      run: pytest --id=${{ github.actor }} -k 'test_${{ needs.extract-num.outputs.num }}'
+    # - name: Run pytest
+    #   run: pytest --id=${{ github.actor }} -k 'test_${{ needs.extract-num.outputs.num }}'
+
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build Docker image
+      run: docker build --build-arg TEST_ID="${{github.actor}}" TEST_NUM="test_${{needs.extract-num.outputs.num}}" -t pytest-container .
+
+    - name: Run tests with Docker
+      run: docker run pytest-container
+
+
 
   create-and-add-label:
     runs-on: ubuntu-latest
@@ -211,27 +222,29 @@ jobs:
       id: path
       run: |
         cd ./script
-        echo "path=$(python read_json.py ./json/path.json ${{ needs.extract-num.outputs.num }})" >> $GITHUB_OUTPUT
-    - name: Read pass solution
-      id: extract
-      run: |
-        cd ./script
-        echo "solution=$(python read_pass_solution.py src/${{github.actor}}/${{steps.path.outputs.path}}/solution_${{ needs.extract-num.outputs.num }}.py')" >> $GITHUB_OUTPUT
-    - name: Print solution number
-      run: echo ${{ steps.extract.outputs.solution }}
+        echo "path=$(python read_json.py ./json/path.json ${{ needs.extract-num.outputs.num }})" >> $GITHUB_OUTPUT      
+    - name: Read package.json
+      id: package
+      uses: juliangruber/read-file-action@v1
+      with:
+        path: ./src/${{github.actor}}/${{steps.path.outputs.path}}/solution_${{ needs.extract-num.outputs.num }}.py
     - name: Write pass solutin at comment
       uses: wow-actions/auto-comment@v1
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         pullRequestOpened: |
+          ❌ 아래의 코드는 테스트를 통과하지 못했습니다.
+
            ```python
-           ${{steps.extract.outputs.solution}}
+           ${{steps.package.outputs.content}}
            ```
     
         pullRequestSynchronize: |
+          ❌ 아래의 코드는 테스트를 통과하지 못했습니다.
+
           ```python
-          ${{steps.extract.outputs.solution}}
+          ${{steps.package.outputs.content}}
           ```
 
 
@@ -312,24 +325,26 @@ jobs:
       run: |
         cd ./script
         echo "path=$(python read_json.py ./json/path.json ${{ needs.extract-num.outputs.num }})" >> $GITHUB_OUTPUT
-    - name: Read pass solution
-      id: extract
-      run: |
-        cd ./script
-        echo "solution=$(python read_pass_solution.py /src/${{github.actor}}/${{steps.path.outputs.path}}/solution_${{ needs.extract-num.outputs.num }}.py)" >> $GITHUB_OUTPUT
-    - name: Print solution number
-      run: echo ${{ steps.extract.outputs.solution }}
+    - name: Read package.json
+      id: package
+      uses: juliangruber/read-file-action@v1
+      with:
+        path: ./src/${{github.actor}}/${{steps.path.outputs.path}}/solution_${{ needs.extract-num.outputs.num }}.py
     - name: Write pass solutin at comment
       uses: wow-actions/auto-comment@v1
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         pullRequestOpened: |
+           ✨ 아래의 코드는 테스트를 통과한 코드입니다.
+
            ```python
-           ${{steps.extract.outputs.solution}}
+           ${{steps.package.outputs.content}}
            ```
     
         pullRequestSynchronize: |
+          ✨ 아래의 코드는 테스트를 통과한 코드입니다.
+
           ```python
-          ${{steps.extract.outputs.solution}}
+          ${{steps.package.outputs.content}}
           ```
