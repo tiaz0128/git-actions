@@ -15,6 +15,7 @@ def setup_module(user_id, func):
     params=[
         ("(())()", True),
         ("((())()", False),
+        ("", "TEST"),
     ],
 )
 def setup(request):
