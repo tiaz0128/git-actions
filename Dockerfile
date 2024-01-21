@@ -10,7 +10,7 @@ COPY pytest.ini /pytest.ini
 RUN pip install -r requirements.txt
 
 # main 의 테스트코드 가져오기
-RUN git clone --single-branch --branch main https://github.com/tiaz0128/git-actions.git /tmp/repo && \
+RUN git clone --single-branch --branch master https://github.com/tiaz0128/git-actions.git /tmp/repo && \
     mv /tmp/repo/tests /tests && \
     rm -rf /tmp/repo
 
