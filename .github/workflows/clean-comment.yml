@@ -1,4 +1,4 @@
-name: Daily PR Update
+name: Clean User PR
 
 on:
   workflow_dispatch:
@@ -21,10 +21,13 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Use the custom parameter
+        run: |
+          echo ${{ github.repository_owner}}
+          echo ${{ github.repository }}
+
+
+      - name: Use the custom parameter
         run: echo Custom Parameter Value ${{ github.event.inputs.custom_parameter }}
-      
-      - name: Print Secrets
-        run: echo ${{ secrets.REPO_OWNER }} ${{ secrets.REPO_NAME }}
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -37,4 +40,4 @@ jobs:
           pip install PyGithub
 
       - name: Run Python script
-        run: python ./script/clean_comments.py ${{ secrets.GITHUB_TOKEN }} ${{ secrets.REPO_OWNER }} ${{ secrets.REPO_NAME }}
+        run: python ./script/clean_comments.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository_owner}} ${{ github.repository }}
