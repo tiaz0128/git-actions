@@ -2,9 +2,9 @@ from github import Github
 import sys
 
 
-def get_comment(token, repo_owner, repo_name):
+def get_comment(token, repo_full_name):
     github = Github(token)
-    repo = github.get_repo(f"{repo_owner}/{repo_name}")
+    repo = github.get_repo(repo_full_name)
     open_prs = repo.get_pulls(state="open")
 
     for pr in open_prs:
@@ -23,6 +23,6 @@ def get_comment(token, repo_owner, repo_name):
 
 if __name__ == "__main__":
     token: str = sys.argv[1]
-    repo_owner, repo_name = sys.argv[2].split("/")
+    repo_full_name = sys.argv[2]
 
-    get_comment(token, repo_owner, repo_name)
+    get_comment(token, repo_full_name)
