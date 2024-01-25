@@ -17,7 +17,7 @@ def get_comment(token, repo_full_name):
             for reaction in reactions:
                 print(f"  - {reaction.content} by {reaction.user.login}")
 
-                if pr.user == reaction.user and reaction.content == "-1":
+                if pr.user == reaction.user and reaction.content == "confused":
                     comment.delete()
 
 
