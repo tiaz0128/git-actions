@@ -5,18 +5,15 @@ import sys
 def get_comment(token, repo_full_name):
     github = Github(token)
     repo = github.get_repo(repo_full_name)
-    open_prs = repo.get_pulls(state="open")
+    open_prs = repo.get_pulls(state="all")
 
     for pr in open_prs:
-        print(f"PR #{pr.number} - {pr.title}")
         comments = pr.get_issue_comments()
 
         for comment in comments:
             reactions = comment.get_reactions()
 
             for reaction in reactions:
-                print(f"  - {reaction.content} by {reaction.user.login}")
-
                 if pr.user == reaction.user and reaction.content == "confused":
                     comment.delete()
 

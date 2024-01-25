@@ -1,0 +1,31 @@
+name: Update README User Status
+
+on:
+  workflow_dispatch:
+    inputs:
+      custom_parameter:
+        description: 'A custom parameter'
+        required: true
+        default: 'default_value'
+
+
+jobs:
+  update-pr-list:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install PyGithub
+
+      - name: Run Python script
+        run: python ./script/clean_comments.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }}
