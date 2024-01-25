@@ -1,13 +1,10 @@
 ## TEST
 <!-- PR Status Start -->
-asd
+Pass count (auth_id): tiaz0128
+Pass count: 40 / 85
+Pass count (auth_id): admin
+Pass count: 30 / 85
 
-asda
-sdas
-da
-dsasd
-
-asd
 <!-- PR Status End -->
 
 ## XXX
