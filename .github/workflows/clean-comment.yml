@@ -10,7 +10,7 @@ name: Clean User PR Comment
 
 on:
   schedule:
-    - cron: '*/3 * * * *'
+    - cron: '*/10 * * * *'
 
 jobs:
   update-pr-list:
