@@ -40,4 +40,4 @@ jobs:
           pip install PyGithub
 
       - name: Run Python script
-        run: python ./script/clean_comments.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository_owner}} ${{ github.repository }}
+        run: python ./script/clean_comments.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }}

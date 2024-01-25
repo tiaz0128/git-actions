@@ -23,7 +23,6 @@ def get_comment(token, repo_owner, repo_name):
 
 if __name__ == "__main__":
     token: str = sys.argv[1]
-    repo_owner: str = sys.argv[2]
-    repo_name: str = sys.argv[3]
+    repo_owner, repo_name = sys.argv[2].split("/")
 
     get_comment(token, repo_owner, repo_name)
