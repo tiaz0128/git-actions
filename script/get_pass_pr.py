@@ -2,7 +2,19 @@ from github import Github
 
 
 def get_pass_label_count(token, repo_full_name):
-    return {"tiaz0128": 40, "admin": 30}
+    return {
+        "tiaz0128": {
+            "img": "http",
+            "pass": 50,
+            "url": "http",
+        },
+        "admin": {
+            "img": "http",
+            "pass": 50,
+            "url": "http",
+        },
+    }
+
     github = Github(token)
     repo = github.get_repo(repo_full_name)
 
@@ -20,5 +32,10 @@ def get_pass_label_count(token, repo_full_name):
         if auth_id == assignee and any(label.name == "pass" for label in pr.labels):
             # 해당 사용자에 대한 pass 라벨 갯수를 카운트합니다.
             pass_label_counts[auth_id] = pass_label_counts.get(auth_id, 0) + 1
+
+    # 전부 패스인 사람 = 명예전당
+    # 풀고 있는 사람 = 라벨 갯수
+    # 그 사람이 풀고있는 곳 클릭 할수 있게
+    # 이름도 나오긴 해야겠네
 
     return pass_label_counts

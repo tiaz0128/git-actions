@@ -36,8 +36,10 @@ def update_readme(token, repo_full_name):
 
 def get_updated_data(pass_label_counts):
     updated_data = ""
-    for user, count in pass_label_counts.items():
-        updated_data += f"Pass count (auth_id): {user}\nPass count: {count} / 85\n"
+    for user, info in pass_label_counts.items():
+        updated_data += (
+            f"Pass count (auth_id): {user}\nPass count: {info['pass']} / 85\n"
+        )
     return updated_data
 
 
