@@ -1,16 +1,8 @@
-name: Clean User PR
+name: Clean User PR Comment
 
 on:
-  workflow_dispatch:
-    inputs:
-      custom_parameter:
-        description: 'A custom parameter'
-        required: true
-        default: 'default_value'
-
-# on:
-#   schedule:
-#     - cron: '0 0 * * *'  # 매일 0시에 실행
+  schedule:
+    - cron: '0 * * * *'  # 매일, 매 시간 마다 실행
 
 jobs:
   update-pr-list:
@@ -18,19 +10,10 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Use the custom parameter
-        run: |
-          echo ${{ github.repository_owner}}
-          echo ${{ github.repository }}
-
-
-      - name: Use the custom parameter
-        run: echo Custom Parameter Value ${{ github.event.inputs.custom_parameter }}
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
