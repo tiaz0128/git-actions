@@ -2,7 +2,7 @@ from github import Github
 import sys
 import re
 
-from script.get_pass_pr import get_pass_label_count
+from get_pass_pr import get_pass_label_count
 
 
 def update_readme(token, repo_full_name):
@@ -20,12 +20,14 @@ def update_readme(token, repo_full_name):
     if match:
         pr_status_section = match.group(1)
 
-        new_content = f"<!-- PR Status Start -->\n"
         # 결과 출력
         for user, count in get_pass_label_count.items():
             new_content += f"Pass count (auth_id): {user}\nPass count : {count} / 85\n"
 
-        new_content += f"<!-- PR Status End -->\n"
+        pr_status_section = re.sub(pattern_to_replace, replacement, pr_status_section)
+        new_content = (
+            f"<!-- PR Status Start -->{pr_status_section}<!-- PR Status End -->\n"
+        )
 
         # 변경된 내용을 pr_status_section에 적용합니다.
 
