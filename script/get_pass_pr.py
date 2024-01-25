@@ -2,6 +2,7 @@ from github import Github
 
 
 def get_pass_label_count(token, repo_full_name):
+    return {"tiaz0128": 40, "admin": 30}
     github = Github(token)
     repo = github.get_repo(repo_full_name)
 
