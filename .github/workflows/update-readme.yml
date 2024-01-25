@@ -28,4 +28,4 @@ jobs:
           pip install PyGithub
 
       - name: Run Python script
-        run: python ./script/clean_comments.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }}
+        run: python ./script/update_readme.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }}
