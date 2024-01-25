@@ -24,19 +24,12 @@ def update_readme(token, repo_full_name):
         # 결과 출력
         pass_label_counts = get_pass_label_count(token, repo_full_name)
 
-        # 기존 데이터에서 pass 관련 내용을 찾아서 업데이트합니다.
+        # 기존 데이터를 삭제하고 새로운 데이터로 채웁니다.
+        new_content = "<!-- PR Status Start -->\n"
         for user, count in pass_label_counts.items():
-            pattern_to_replace = f"Pass count (auth_id): {user}\nPass count: .* / 85"
-            replacement = f"Pass count (auth_id): {user}\nPass count: {count} / 85"
-            pr_status_section = re.sub(
-                pattern_to_replace, replacement, pr_status_section
-            )
+            new_content += f"Pass count (auth_id): {user}\nPass count: {count} / 85\n"
 
-        new_content = (
-            f"<!-- PR Status Start -->{pr_status_section}<!-- PR Status End -->\n"
-        )
-
-        # 변경된 내용을 pr_status_section에 적용합니다.
+        new_content += "<!-- PR Status End -->\n"
 
         # README.md 파일을 업데이트합니다.
         repo.update_file(
