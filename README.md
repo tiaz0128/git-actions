@@ -1,17 +1,13 @@
 ## TEST
 <!-- PR Status Start -->
-
- <div
+<div
       style="
         display: flex;
         flex-wrap: wrap;
         justify-content: space-around;
         padding: 20px;
         border: 2px solid black;
-      "
-    >
-
-    <avata style="position: relative">
+      "><avata style="position: relative">
         <span
           style="
             position: absolute;
@@ -49,9 +45,6 @@
           ></a
         >
       </avata>
-
-
-    </div>
-<!-- PR Status End -->
+</div><!-- PR Status End -->
 
 ## XXX
