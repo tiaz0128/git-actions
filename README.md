@@ -1,9 +1,9 @@
 ## TEST
 <!-- PR Status Start -->
-Pass count (auth_id): tiaz0128
-Pass count: 40 / 85
-Pass count (auth_id): admin
-Pass count: 30 / 85
+info['img']
+tiaz0128(통붕이)
+0
+https://github.com/tiaz0128/git-actions/pulls?q=is%3Apr+author%3Atiaz0128+assignee%3Atiaz0128
 
 <!-- PR Status End -->
 
