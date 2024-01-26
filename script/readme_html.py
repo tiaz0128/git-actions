@@ -1,5 +1,5 @@
-start_html = """<div style="display: flex;flex-wrap: wrap;justify-content: space-around;padding: 20px;border: 2px solid black;">"""
+start_html = """<table style="border: 2px solid black; width: 100%; border-collapse: collapse">"""
 
-avatar_html = """<div style="position: relative"><span style="position: absolute;text-align: center;font-size: 12px;font-weight: 700;color: white;background-color: steelblue;padding: 4px 7px;border-radius: 10%;">{cnt} / {total}</span><img src={img} style="width: 100px;height: 100px;border-radius: 50%;display: flex;align-items: center;justify-content: center;margin: 10px;border: 2px solid rgba(22, 22, 22, 0.278);background-size: cover;"/><div><span style="text-align: center; font-size: 14px">{name}</span><span style="text-align: center; font-size: 14px">({id})</span></div><a target="_blank" href="{url}"><span style="text-align: center; font-size: 14px">문제 풀이 보러가기</span></a></div>"""
+avatar_html = """<td style="text-align: center; vertical-align: middle; padding: 20px"><div><img src="{img}" style="width: 100px; height: 100px"/><div>{name}({id})</div><div>{cnt} / {total}</div><div><a href={url}>✨풀이 보러가기</a></div></td>"""
 
-end_html = """</div>"""
+end_html = """</table>"""
