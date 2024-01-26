@@ -14,7 +14,7 @@ def update_readme(token, repo_full_name):
     readme_content = readme_file.decoded_content.decode("utf-8")
 
     # 새로운 데이터를 받아옵니다.
-    pass_label_counts = get_pass_label_count(token, repo_full_name)
+    pass_label_counts = get_pass_label_count(repo)
 
     # <!-- PR Status Start -->와 <!-- PR Status End --> 사이의 부분을 새로운 데이터로 교체합니다.
     pattern = r"<!-- PR Status Start -->(.*?)<!-- PR Status End -->"
@@ -36,9 +36,12 @@ def update_readme(token, repo_full_name):
 
 def get_updated_data(pass_label_counts):
     updated_data = ""
-    for user, info in pass_label_counts.items():
+    for id, info in pass_label_counts.items():
+        # TODO 전부 패스인 사람 = 명예전당
+
+        # 그냥 일단 나열
         updated_data += (
-            f"Pass count (auth_id): {user}\nPass count: {info['pass']} / 85\n"
+            f"info['img']\n{info['id']}({info['name']})\n{info['cnt']}\n{info['url']}\n"
         )
     return updated_data
 

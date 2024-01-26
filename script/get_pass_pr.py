@@ -1,41 +1,27 @@
-from github import Github
+def get_pass_label_count(repo):
+    open_prs = repo.get_pulls(state="all")
 
+    users = {}
+    SERVER_URL = "https://github.com"
+    REPOSITORY = "tiaz0128/git-actions"
 
-def get_pass_label_count(token, repo_full_name):
-    return {
-        "tiaz0128": {
-            "img": "http",
-            "pass": 50,
-            "url": "http",
-        },
-        "admin": {
-            "img": "http",
-            "pass": 50,
-            "url": "http",
-        },
-    }
+    for pr in open_prs:
+        # 1. PR 작성자 == PR assignee (붙어있는 경우만 가져와서)
 
-    github = Github(token)
-    repo = github.get_repo(repo_full_name)
+        if pr.user in pr.assignees:
+            cnt = 0
+            id = pr.user.login
 
-    # PR 목록을 가져옵니다.
-    pr_list = repo.get_pulls(state="all")
+            if not users.get(id):
+                users[id] = {
+                    "id": id,
+                    "name": pr.user.name,
+                    "img": pr.user.avatar_url,
+                    "url": f"{SERVER_URL}/{REPOSITORY}/pulls?q=is%3Apr+author%3A{id}+assignee%3A{id}",
+                    "cnt": 0,
+                }
 
-    pass_label_counts = {}
+            if "Pass" in [label.name for label in pr.labels]:
+                users[id][cnt] += 1
 
-    for pr in pr_list:
-        # PR의 작성자 (auth_id)와 할당된 사용자 (assignee)를 가져옵니다.
-        auth_id = pr.user.login
-        assignee = pr.assignee.login if pr.assignee else None
-
-        # auth_id와 assignee가 동일하고, PR에 'pass' 라벨이 붙어있는지 확인합니다.
-        if auth_id == assignee and any(label.name == "pass" for label in pr.labels):
-            # 해당 사용자에 대한 pass 라벨 갯수를 카운트합니다.
-            pass_label_counts[auth_id] = pass_label_counts.get(auth_id, 0) + 1
-
-    # 전부 패스인 사람 = 명예전당
-    # 풀고 있는 사람 = 라벨 갯수
-    # 그 사람이 풀고있는 곳 클릭 할수 있게
-    # 이름도 나오긴 해야겠네
-
-    return pass_label_counts
+    return users
