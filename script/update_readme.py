@@ -3,6 +3,7 @@ import sys
 import re
 
 from get_pass_pr import get_pass_label_count
+from readme_html import start_html, avatar_html, end_html
 
 
 def update_readme(token, repo_full_name):
@@ -20,7 +21,7 @@ def update_readme(token, repo_full_name):
     pattern = r"<!-- PR Status Start -->(.*?)<!-- PR Status End -->"
     new_content = re.sub(
         pattern,
-        f"<!-- PR Status Start -->\n{get_updated_data(pass_label_counts)}\n<!-- PR Status End -->",
+        f"<!-- PR Status Start -->\n{start_html}{get_updated_data(pass_label_counts)}\n{end_html}<!-- PR Status End -->",
         readme_content,
         flags=re.DOTALL,
     )
@@ -36,13 +37,13 @@ def update_readme(token, repo_full_name):
 
 def get_updated_data(pass_label_counts):
     updated_data = ""
+    total = 85
+
     for id, info in pass_label_counts.items():
         # TODO 전부 패스인 사람 = 명예전당
 
         # 그냥 일단 나열
-        updated_data += (
-            f"info['img']\n{info['id']}({info['name']})\n{info['cnt']}\n{info['url']}\n"
-        )
+        updated_data += avatar_html.format(**info, total=total)
     return updated_data
 
 
