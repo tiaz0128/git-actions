@@ -1,8 +1,7 @@
 ## TEST
 <!-- PR Status Start -->
 
-<img
-  style="
+<img style="
     width: 100px;
     height: 100px;
     border-radius: 50%;
@@ -11,10 +10,9 @@
     justify-content: center;
     margin: 10px;
     border: 2px solid rgba(22, 22, 22, 0.278);
-    background-size: cover;
-  "
-  src="https://avatars.githubusercontent.com/u/44606727?v=4"
-></img>
+    background-size: cover;"
+    src="https://avatars.githubusercontent.com/u/44606727?v=4"
+/>
 
 <!-- PR Status End -->
 ## XXX
