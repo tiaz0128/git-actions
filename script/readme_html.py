@@ -1,17 +1,13 @@
-start_html = """
- <div
+start_html = """<div
       style="
         display: flex;
         flex-wrap: wrap;
         justify-content: space-around;
         padding: 20px;
         border: 2px solid black;
-      "
-    >
-"""
+      ">"""
 
-avatar_html = """
-    <avata style="position: relative">
+avatar_html = """<avata style="position: relative">
         <span
           style="
             position: absolute;
@@ -48,9 +44,6 @@ avatar_html = """
             >문제 풀이 보러가기</span
           ></a
         >
-      </avata>
-"""
+      </avata>"""
 
-end_html = """
-    </div>
-"""
+end_html = """</div>"""
